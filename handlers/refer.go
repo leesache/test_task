@@ -12,7 +12,6 @@ import (
 )
 
 // ReferUser handles applying a referral code to a user
-// ReferUser handles applying a referral code to a user
 func ReferUser(c *gin.Context) {
 	// Extract user ID from the URL parameter
 	id := c.Param("id")
