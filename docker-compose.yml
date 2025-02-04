@@ -1,0 +1,36 @@
+services:
+  db:
+    build:
+      context: ./docker/db            # Path to the db Dockerfile
+    container_name: denet-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - denet-network
+
+  web:
+    build:
+      context: .             # Root of the project (where go.mod is located)
+      dockerfile: docker/web/Dockerfile  # Path to the web Dockerfile
+    container_name: denet-web
+    ports:
+      - "9090:9090"
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/test_db?sslmode=disable"
+      JWT_SECRET: "your_jwt_secret_key"
+    depends_on:
+      - db
+    networks:
+      - denet-network
+
+volumes:
+  db_data:
+
+networks:
+  denet-network:
